@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase SDK (Compat for easier integration) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
         :root {
             --bg-color: #0C1014;
@@ -368,9 +371,64 @@
             color: #737373;
             font-size: 11px;
         }
+
+        /* Success State */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .success-overlay.show {
+            display: flex;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--ig-gradient);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(184, 0, 230, 0.4);
+        }
+
+        .premium-badge {
+            background: gold;
+            color: black;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 12px;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Success Screen -->
+    <div id="successOverlay" class="success-overlay">
+        <div class="success-icon">
+            <i data-lucide="check" color="white" size="48"></i>
+        </div>
+        <h1 style="font-size: 28px; margin-bottom: 8px;">Access Granted</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Welcome to Vibinsta Premium</p>
+        <div id="userName" style="font-size: 20px; font-weight: 700; background: var(--ig-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">User</div>
+        <div class="premium-badge">Exclusive Access</div>
+    </div>
 
     <main>
         <!-- Left Panel: Branding & Visuals -->
@@ -472,14 +530,65 @@
     </footer>
 
     <script>
+        // ==========================================
+        // FIREBASE CONFIGURATION
+        // Replace with your Firebase config from the Console
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Login Logic
-        const userInput = document.getElementById('userInput');
-        const passInput = document.getElementById('passInput');
+        // Selectors
         const loginBtn = document.getElementById('loginBtn');
         const loginForm = document.getElementById('loginForm');
+        const successOverlay = document.getElementById('successOverlay');
+        const userNameDisplay = document.getElementById('userName');
+
+        // Handle Secure Google Login
+        async function handleLogin() {
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Signing in...';
+            loginBtn.style.opacity = '0.7';
+
+            try {
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+                
+                // Show Success State
+                userNameDisplay.innerText = user.displayName || user.email;
+                successOverlay.classList.add('show');
+                
+                // Refresh icons in the success overlay
+                lucide.createIcons();
+                
+            } catch (error) {
+                console.error("Auth Error:", error);
+                alert("Login Error: " + error.message);
+                loginBtn.innerHTML = 'Log In';
+                loginBtn.style.opacity = '1';
+            }
+        }
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleLogin();
+        });
+
+        // Keep existing interactive logic for look/feel
+        const userInput = document.getElementById('userInput');
+        const passInput = document.getElementById('passInput');
 
         function checkInputs() {
             if (userInput.value.trim().length > 0 && passInput.value.length >= 6) {
@@ -493,18 +602,6 @@
 
         userInput.addEventListener('input', checkInputs);
         passInput.addEventListener('input', checkInputs);
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loginBtn.innerHTML = 'Logging in...';
-            loginBtn.style.opacity = '0.5';
-            
-            setTimeout(() => {
-                alert('Success: Development Placeholder');
-                loginBtn.innerHTML = 'Log In';
-                loginBtn.style.opacity = '1';
-            }, 1000);
-        });
     </script>
 </body>
 </html>
