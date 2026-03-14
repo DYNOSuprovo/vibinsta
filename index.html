@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0C1014;
+            --panel-left: #0C1014; /* Matched to Instagram Logo Background */
+            --panel-right: #152127; /* Matched to Meta Logo Background */
+            --primary-accent: #0064E0;
+            --primary-hover: #0056b3;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --text-white: #F5F5F5;
+            --text-secondary: #8E8E8E;
+            --ig-gradient: linear-gradient(45deg, #FF6B00 0%, #FF2156 50%, #B800E6 100%);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Entrance Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Layout */
+        main {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        @media (min-width: 800px) {
+            main {
+                flex-direction: row;
+            }
+        }
+
+        /* Left Panel */
+        .hero-panel {
+            flex: 1.2;
+            background-color: var(--panel-left);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .ig-logo-top {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            width: 150px; /* Adjusted to fit the image logo */
+        }
+
+        .ig-logo-top img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-content {
+            z-index: 10;
+            text-align: center;
+            max-width: 600px;
+            margin-top: 50px;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 50px;
+            color: #FFFFFF;
+        }
+
+        .hero-title .gradient-text {
+            background: var(--ig-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Mockup Collage */
+        .mockup-container {
+            position: relative;
+            width: 320px;
+            height: 380px;
+            margin: 0 auto;
+        }
+
+        .mockup-card {
+            position: absolute;
+            border-radius: 24px;
+            padding: 2px;
+            background: #1C1C1C;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .mockup-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 22px;
+        }
+
+        .card-left {
+            width: 160px;
+            height: 260px;
+            left: -45px;
+            top: 60px;
+            transform: rotate(-10deg);
+            z-index: 1;
+        }
+
+        .card-right {
+            width: 160px;
+            height: 250px;
+            right: -35px;
+            top: 80px;
+            transform: rotate(8deg);
+            z-index: 1;
+        }
+
+        .card-center {
+            width: 190px;
+            height: 340px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Floating Bubbles */
+        .floating-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: 50px;
+            color: #000;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 20;
+        }
+
+        .bubble-1 { top: 20px; left: -20px; background: #FFFFFF; }
+        .bubble-2 { bottom: 100px; left: -60px; font-size: 28px; background: transparent; box-shadow: none; color: #FF2D55; }
+        .bubble-3 { top: 80px; right: -20px; background: #22C55E; color: #fff; width: 32px; height: 32px; justify-content: center; padding: 0; }
+
+        /* Right Panel */
+        .login-panel {
+            flex: 0.8;
+            background-color: var(--panel-right);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            border-left: 1px solid var(--glass-border);
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .login-box h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #FFFFFF;
+        }
+
+        /* Form Controls */
+        .form-group {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .input-control {
+            width: 100%;
+            height: 52px;
+            background: #0E1318;
+            border: 1px solid #363636;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #FFFFFF;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-control:focus {
+            border-color: #0095f6;
+        }
+
+        .input-control::placeholder {
+            color: #737373;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 48px;
+            background-color: #00376B;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-login.active {
+            background-color: #0095f6;
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .forgot-link {
+            text-align: center;
+            display: block;
+            margin: 20px 0 30px;
+            font-size: 14px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: #8E8E8E;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #262626;
+        }
+
+        .divider span { padding: 0 15px; }
+
+        /* Secondary Actions - Pill shaped */
+        .btn-pill {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid #363636;
+            border-radius: 50px;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn-pill:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-create {
+            color: #0095F6;
+        }
+
+        /* Meta Branding Integration */
+        .meta-footer {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .meta-logo-img {
+            width: 120px; /* Sizing the custom meta logo */
+            height: auto;
+            display: block;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            padding: 20px;
+            border-top: 1px solid #121212;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-links a {
+            color: #737373;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .meta-copyright {
+            text-align: center;
+            margin-top: 15px;
+            color: #737373;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <!-- Left Panel: Branding & Visuals -->
+        <section class="hero-panel">
+            <div class="ig-logo-top">
+                <img src="image.png" alt="Instagram Logo">
+            </div>
+
+            <div class="hero-content fade-in">
+                <h1 class="hero-title">
+                    See everyday moments from your<br>
+                    <span class="gradient-text">close friends.</span>
+                </h1>
+
+                <!-- Visual Collage Mockup -->
+                <div class="mockup-container">
+                    <div class="floating-bubble bubble-1">
+                        🤯🔮 Pure Vibe
+                    </div>
+                    <div class="floating-bubble bubble-2">❤️</div>
+                    <div class="floating-bubble bubble-3">
+                        <i data-lucide="star" fill="white" size="16px"></i>
+                    </div>
+
+                    <!-- Cards -->
+                    <div class="mockup-card card-left">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80" alt="Friend 1">
+                    </div>
+                    <div class="mockup-card card-right">
+                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=400&q=80" alt="Friend 2">
+                    </div>
+                    <div class="mockup-card card-center">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Main Photo">
+                        <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 64px; height: 4px; background: rgba(255,255,255,0.4); border-radius: 10px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Login Flow -->
+        <section class="login-panel">
+            <div class="login-box fade-in">
+                <h2>Log into Instagram</h2>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="text" id="userInput" class="input-control" placeholder="Mobile number, username or email" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" id="passInput" class="input-control" placeholder="Password" required>
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="btn-login" disabled>Log in</button>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </form>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button class="btn-pill">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Log in with Facebook
+                </button>
+
+                <button class="btn-pill btn-create">
+                    Create new account
+                </button>
+
+                <!-- Custom Meta Logo from Image -->
+                <div class="meta-footer">
+                    <img src="image copy.png" alt="Meta Logo" class="meta-logo-img">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Links -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">Meta</a>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Jobs</a>
+            <a href="#">Help</a>
+            <a href="#">API</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Locations</a>
+            <a href="#">Instagram Lite</a>
+            <a href="#">Threads</a>
+            <a href="#">Contact Uploading & Non-Users</a>
+            <a href="#">Meta Verified</a>
+        </div>
+        <p class="meta-copyright">© 2026 Instagram from Meta</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Login Logic
+        const userInput = document.getElementById('userInput');
+        const passInput = document.getElementById('passInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginForm = document.getElementById('loginForm');
+
+        function checkInputs() {
+            if (userInput.value.trim().length > 0 && passInput.value.length >= 6) {
+                loginBtn.disabled = false;
+                loginBtn.classList.add('active');
+            } else {
+                loginBtn.disabled = true;
+                loginBtn.classList.remove('active');
+            }
+        }
+
+        userInput.addEventListener('input', checkInputs);
+        passInput.addEventListener('input', checkInputs);
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginBtn.innerHTML = 'Logging in...';
+            loginBtn.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                alert('Success: Development Placeholder');
+                loginBtn.innerHTML = 'Log In';
+                loginBtn.style.opacity = '1';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
